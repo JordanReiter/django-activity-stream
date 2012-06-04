@@ -23,7 +23,7 @@ DATABASES = {
 # although not all choices may be available on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Eastern'
+TIME_ZONE = 'America/New_York'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -33,7 +33,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -65,6 +65,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'example_project.urls'
@@ -86,8 +87,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'registration',
-    'actstream',
     'testapp',
+    'south',
+    'actstream',
+    'debug_toolbar',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -106,7 +109,7 @@ def users(request):
 
 def user_override(user):
     from django.contrib.contenttypes.models import ContentType
-    from django.core.urlresolvers import reverse    
+    from django.core.urlresolvers import reverse
     return reverse('actstream_actor',None,(ContentType.objects.get_for_model(user).pk,user.pk))
 
 ABSOLUTE_URL_OVERRIDES = {
@@ -115,3 +118,20 @@ ABSOLUTE_URL_OVERRIDES = {
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
+ACTSTREAM_ACTION_MODELS = ('auth.user', 'auth.group', 'sites.site', 'comments.comment')
+
+ACTSTREAM_MANAGER = 'testapp.streams.MyActionManager'
+
+FETCH_RELATIONS = True
+
+USE_PREFETCH = True
+
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.template.TemplateDebugPanel',
+)
+
+INTERNAL_IPS = ('127.0.0.1',)
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
