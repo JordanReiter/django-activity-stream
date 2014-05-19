@@ -108,7 +108,7 @@ class DisplayActionShort(AsNode):
             'activity/%s/action.html' % action_instance.verb.replace(' ', '_'),
             'activity/action.html',
         ]
-        return render_to_string(templates, { 'hide_actor': True, 'action':action_instance }
+        return render_to_string(templates, { 'hide_actor': True, 'action':action_instance }, context)
 
 class DisplayGroupedActions(AsNode):
     def render_result(self, context):
@@ -192,7 +192,7 @@ def follow_label(parser, token):
         
     """
     bits = token.split_contents()
-        if len(bits) != 4:
+    if len(bits) != 4:
         raise TemplateSyntaxError, "Accepted format {% follow_label [instance] [follow_string] [unfollow_string] %}"
     else:
         return DisplayActivityFollowLabel(*bits[1:])
@@ -220,3 +220,4 @@ register.tag(display_grouped_action)
 register.tag(follow_url)
 register.tag(follow_label)
 register.tag(actor_url)
+
