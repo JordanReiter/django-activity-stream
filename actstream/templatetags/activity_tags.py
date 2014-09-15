@@ -114,10 +114,9 @@ class DisplayGroupedActions(AsNode):
     def render_result(self, context):
         actions_instance = self.args[0].resolve(context)
         templates = [
-            'activity/%s/grouped.html' % action_instance.verb.replace(' ', '_'),
             'activity/grouped.html',
         ]
-        return render_to_string(templates, { 'actions': actions_instance }
+        return render_to_string(templates, { 'actions': actions_instance }, context)
 
 
 def display_action(parser, token):
@@ -150,7 +149,7 @@ def display_grouped_actions(parser, token):
 
         {% display_grouped_actions actions %}
     """
-    return DisplayGroupedAction.handle_token(parser, token)
+    return DisplayGroupedActions.handle_token(parser, token)
 
 
 def is_following(user, actor):
@@ -216,7 +215,7 @@ def actor_url(parser, token):
 register.filter(is_following)
 register.tag(display_action)
 register.tag(display_action_short)
-register.tag(display_grouped_action)
+register.tag(display_grouped_actions)
 register.tag(follow_url)
 register.tag(follow_label)
 register.tag(actor_url)
